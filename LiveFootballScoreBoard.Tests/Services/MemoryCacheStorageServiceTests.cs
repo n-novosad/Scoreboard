@@ -39,6 +39,32 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.AreEqual(expectedResult, actualResult);
 		}
 
+		[TestMethod]
+		public void GetItem_ReturnsNullWhenKeyDoesNotExist()
+		{
+			// Arrange
+			var expectedResult = default(string?);
+
+			// Act
+			var actualResult = _service.GetItem(MatchesKey);
+
+			// Assert
+			Assert.AreEqual(expectedResult, actualResult);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetItem_ThrowsExceptionWhenMemoryCacheIsNotProvided()
+		{
+			// Arrange
+			var emptyMemoryCache = default(MemoryCache);
+
+			// Act
+			var service = new MemoryCacheStorageService(emptyMemoryCache, _loggerMock.Object);
+
+			// Assert
+		}
+
 		[TestCleanup]
 		public void Cleanup()
 		{
