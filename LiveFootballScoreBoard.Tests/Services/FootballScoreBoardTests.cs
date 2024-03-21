@@ -100,6 +100,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 
 			// Assert
 			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.TEAM_CANNOT_BE_EMPTY, actualResult.Error.Message);
 		}
 
 		[TestMethod]
