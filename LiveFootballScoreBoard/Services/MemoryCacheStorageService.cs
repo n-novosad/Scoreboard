@@ -36,7 +36,18 @@ namespace LiveFootballScoreBoard.Services
 
 		public ExecutionResult UpdateItem(string id, string? item)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				_memoryCache.Set<string?>(id, item);
+
+				return new ExecutionResult { Succeeded = true };
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message, e);
+
+				return new ExecutionResult { Error = e, Succeeded = false };
+			}
 		}
 	}
 }
