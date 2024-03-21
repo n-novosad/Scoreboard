@@ -17,7 +17,16 @@ namespace LiveFootballScoreBoard.Services
 
         public string? GetItem(string id)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				return _memoryCache.Get<string?>(id);
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message, e);
+
+				return null;
+			}
 		}
 
 		public ExecutionResult RemoveItem(string id)
