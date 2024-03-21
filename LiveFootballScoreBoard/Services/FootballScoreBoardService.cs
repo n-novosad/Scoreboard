@@ -99,6 +99,8 @@ namespace LiveFootballScoreBoard.Services
 
 					match.Scores = new(homeTeamScore, awayTeamScore);
 
+					_storageService.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, JsonSerializer.Serialize(_liveFootballMatches));
+
 					return new ExecutionResult { Succeeded = true };
 				}
 
