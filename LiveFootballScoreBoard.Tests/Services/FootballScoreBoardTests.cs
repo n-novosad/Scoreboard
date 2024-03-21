@@ -13,7 +13,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 		private const ushort MatchDuration = Constants.FOOTBALL_MATCH_DURATION_MINS;
 		private const ushort MatchDelay = Constants.FOOTBALL_MATCH_OVERDUE_MINS;
 		private const  string NonDeserializableCacheValue = "{}";
-
+		private const string AwayTeam = "Barcelona";
 		private readonly Mock<IStorageService<string?>> _storageServiceMock;
 		private readonly IFootballScoreBoardService _service;
 
@@ -86,6 +86,20 @@ namespace LiveFootballScoreBoard.Tests.Services
 
 			// Assert
 			_storageServiceMock.Verify(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY), Times.Exactly(2));
+		}
+
+		[TestMethod]
+		public void StartFootballMatch_ReturnsErrorResponseWhenAnyOfTeamIsNotProvided()
+		{
+			// Arrange
+			var homeTeam = default(string?);
+			var expectedResult = new ExecutionResult<int> { Succeeded = false };
+
+			// Act
+			var actualResult = _service.StartFootballMatch(homeTeam, AwayTeam);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
 		}
 
 		[TestMethod]
