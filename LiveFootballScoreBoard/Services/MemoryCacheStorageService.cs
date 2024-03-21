@@ -12,7 +12,7 @@ namespace LiveFootballScoreBoard.Services
 		public MemoryCacheStorageService(IMemoryCache memoryCache, ILogger<MemoryCacheStorageService> logger)
         {
 			_memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
-			_logger = logger;
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
         public string? GetItem(string id)
