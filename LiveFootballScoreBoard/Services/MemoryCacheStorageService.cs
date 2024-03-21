@@ -25,7 +25,7 @@ namespace LiveFootballScoreBoard.Services
 			{
 				_logger.LogError(e.Message, e);
 
-				return null;
+				throw;
 			}
 		}
 
