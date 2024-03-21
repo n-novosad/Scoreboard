@@ -116,5 +116,19 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.IsFalse(actualResult.Succeeded);
 			Assert.AreEqual(Constants.TEAM_CANNOT_COMPETE_AGAINST_THEMSELVES, actualResult.Error.Message);
 		}
+
+		[TestMethod]
+		public void StartFootballMatch_ReturnsErrorWhenAnyOfTwoTeamsAlreadyPlaying()
+		{
+			// Arrange
+			var expectedResult = new ExecutionResult<int> { Succeeded = false };
+
+			// Act
+			var actualResult = _service.StartFootballMatch(_footballMatches[0].HomeTeam, AwayTeam);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.TEAM_ALREADY_PLAYING, actualResult.Error.Message);
+		}
 	}
 }

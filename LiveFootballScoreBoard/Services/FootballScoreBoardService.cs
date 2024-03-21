@@ -33,12 +33,15 @@ namespace LiveFootballScoreBoard.Services
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(homeTeam?.Trim()) || string.IsNullOrEmpty(awayTeam?.Trim()))
+				awayTeam = awayTeam?.Trim();
+				homeTeam = homeTeam?.Trim();
+
+				if (string.IsNullOrEmpty(homeTeam) || string.IsNullOrEmpty(awayTeam))
 				{
 					return new ExecutionResult<long> { Succeeded = false, Error = new ArgumentException(Constants.TEAM_CANNOT_BE_EMPTY)};
 				}
 
-				if (homeTeam.Trim().Equals(awayTeam.Trim(), StringComparison.InvariantCultureIgnoreCase))
+				if (homeTeam.Equals(awayTeam, StringComparison.InvariantCultureIgnoreCase))
 				{
 					return new ExecutionResult<long> { Succeeded = false, Error = new ArgumentException(Constants.TEAM_CANNOT_COMPETE_AGAINST_THEMSELVES) };
 				}
