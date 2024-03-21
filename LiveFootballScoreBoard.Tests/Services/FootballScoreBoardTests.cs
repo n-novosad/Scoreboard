@@ -163,5 +163,20 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.IsTrue(pressumableId <= actualResult.Response);
 			_storageServiceMock.Verify(t => t.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, It.IsAny<string?>()));
 		}
+
+		[TestMethod]
+		public void UpdateMatchScore_RenewsMatchScoresWithNewOne()
+		{
+			// Arrange
+			var matchId = 0;
+			ushort homeTeamScore = 1;
+			ushort awayTeamScore = 0;
+
+			// Act
+			var actualResult = _service.UpdateMatchScore(matchId, homeTeamScore, awayTeamScore);
+
+			// Assert
+			Assert.IsTrue(actualResult.Succeeded);
+		}
 	}
 }
