@@ -75,6 +75,19 @@ namespace LiveFootballScoreBoard.Tests.Services
 		}
 
 		[TestMethod]
+		public void Constructor_InitializesEmptyContainerIfNothingInMemory()
+		{
+			// Arrange
+			_storageServiceMock.Setup(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY))
+				.Returns(default(string?));
+			// Act
+			var service = new FootballScoreBoardService(_storageServiceMock.Object, _loggerMock.Object);
+
+			// Assert
+			_storageServiceMock.Verify(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY), Times.Exactly(2));
+		}
+
+		[TestMethod]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void StartFootballMatch_ThrowsExceptionWhenLoggerIsNull()
 		{
