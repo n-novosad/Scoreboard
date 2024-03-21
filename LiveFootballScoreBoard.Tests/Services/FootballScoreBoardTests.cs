@@ -253,5 +253,19 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.IsTrue(actualResult.Succeeded);
 		}
+
+		[TestMethod]
+		public void FinishMatch_GenerateErrorResponseWhenMatchNotFound()
+		{
+			// Arrange
+			var matchId = -1;
+
+			// Act
+			var actualResult = _service.FinishMatch(matchId);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.MATCH_WITH_SPECIFIED_ID_NOT_FOUND, actualResult.Error.Message);
+		}
 	}
 }

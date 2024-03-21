@@ -21,7 +21,24 @@ namespace LiveFootballScoreBoard.Services
 
         public ExecutionResult FinishMatch(long matchId)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				if (_liveFootballMatches.ContainsKey(matchId))
+				{
+					if (_liveFootballMatches.TryRemove(matchId, out var match))
+					{
+						return new ExecutionResult { Succeeded = true };
+					}
+				}
+
+				return new ExecutionResult { Succeeded = false, Error = new ArgumentException(Constants.MATCH_WITH_SPECIFIED_ID_NOT_FOUND) };
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message, e);
+
+				return new ExecutionResult<long> { Error = e, Succeeded = false };
+			}
 		}
 
 		public ExecutionResult<IList<FootballMatch>> GetMatchesScoreSummary()
