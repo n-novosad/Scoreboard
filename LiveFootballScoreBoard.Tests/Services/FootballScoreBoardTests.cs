@@ -178,5 +178,35 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.IsTrue(actualResult.Succeeded);
 		}
+
+		[TestMethod]
+		public void UpdateMatchScore_GeneratesErrorResponseWhenMatchIsNotFound()
+		{
+			// Arrange
+			var matchId = -3;
+			ushort homeTeamScore = 1;
+			ushort awayTeamScore = 0;
+
+			// Act
+			var actualResult = _service.UpdateMatchScore(matchId, homeTeamScore, awayTeamScore);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+		}
+
+		[TestMethod]
+		public void UpdateMatchScore_GeneratesErrorResponseWhenScoreIsDecreased()
+		{
+			// Arrange
+			var matchId = 1;
+			ushort homeTeamScore = 2;
+			ushort awayTeamScore = 3;
+
+			// Act
+			var actualResult = _service.UpdateMatchScore(matchId, homeTeamScore, awayTeamScore);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+		}
 	}
 }
