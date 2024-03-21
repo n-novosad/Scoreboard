@@ -92,6 +92,11 @@ namespace LiveFootballScoreBoard.Services
 						return new ExecutionResult { Succeeded = false, Error = new ArgumentException(Constants.MATCH_SCORES_CAN_BE_ONLY_AUGMENTED) };
 					}
 
+					if (homeTeamScore > Constants.SCORE_MAX_THRESHOLD || awayTeamScore > Constants.SCORE_MAX_THRESHOLD)
+					{
+						return new ExecutionResult { Succeeded = false, Error = new ArgumentException(Constants.SCORES_CANNOT_EXCEED_SETTLED_THRESHOLD) };
+					}
+
 					match.Scores = new(homeTeamScore, awayTeamScore);
 
 					return new ExecutionResult { Succeeded = true };
