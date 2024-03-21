@@ -92,6 +92,26 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 		}
 
+		[TestMethod]
+		[DataRow("footballMatches", "[]")]
+		[DataRow("hockeyMatches", null)]
+		[DataRow("footballMatches", "[1, 2, 4]")]
+		public void UpdateItem_AddsNewItemIfItMissingOrUpdateOne(string key, string? value)
+		{
+			// Arrange
+			var expectedResult = new ExecutionResult { Succeeded = true };
+			var expectedEntries = _memoryCache.GetCurrentStatistics().CurrentEntryCount + 2;
+
+			// Act
+			var actualResult = _service.UpdateItem(key, value);
+
+			// Assert
+			Assert.IsNotNull(actualResult);
+			Assert.AreEqual(expectedResult.Succeeded, actualResult.Succeeded);
+			Assert.AreEqual(_memoryCache.Get<string?>(key), value);
+			Assert.AreEqual(_memoryCache.GetCurrentStatistics().CurrentEntryCount, expectedEntries);
+		}
+
 		[TestCleanup]
 		public void Cleanup()
 		{
