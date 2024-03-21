@@ -10,8 +10,6 @@ namespace LiveFootballScoreBoard.Tests.Services
 	[TestClass]
 	public class FootballScoreBoardTests : BaseTests<FootballScoreBoardService>
 	{
-		private const ushort MatchDuration = Constants.FOOTBALL_MATCH_DURATION_MINS;
-		private const ushort MatchDelay = Constants.FOOTBALL_MATCH_OVERDUE_MINS;
 		private const  string NonDeserializableCacheValue = "{}";
 		private const string AwayTeam = "Barcelona";
 		private const string HomeTeam = "Madrid";
@@ -241,6 +239,19 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.IsTrue(actualResult.Succeeded);
 			_storageServiceMock.Verify(t => t.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, It.IsAny<string?>()));
+		}
+
+		[TestMethod]
+		public void FinishMatch_WillRemoveMatchFromScoreBoardWhenFound()
+		{
+			// Arrange
+			var matchId = 1;
+
+			// Act
+			var actualResult = _service.FinishMatch(matchId);
+
+			// Assert
+			Assert.IsTrue(actualResult.Succeeded);
 		}
 	}
 }
