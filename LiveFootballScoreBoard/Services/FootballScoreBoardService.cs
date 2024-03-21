@@ -46,6 +46,15 @@ namespace LiveFootballScoreBoard.Services
 					return new ExecutionResult<long> { Succeeded = false, Error = new ArgumentException(Constants.TEAM_CANNOT_COMPETE_AGAINST_THEMSELVES) };
 				}
 
+				if (_liveFootballMatches.Any(t => 
+						t.Value.HomeTeam.Equals(homeTeam, StringComparison.InvariantCultureIgnoreCase) 
+						|| t.Value.AwayTeam.Equals(homeTeam, StringComparison.OrdinalIgnoreCase)
+						|| t.Value.HomeTeam.Equals(awayTeam, StringComparison.InvariantCultureIgnoreCase) 
+						|| t.Value.AwayTeam.Equals(awayTeam, StringComparison.OrdinalIgnoreCase)))
+				{
+					return new ExecutionResult<long> { Succeeded = false, Error = new ArgumentException(Constants.TEAM_ALREADY_PLAYING) };
+				}
+
 				var id = DateTime.UtcNow.Ticks;
 				var newMatch = new FootballMatch 
 				{ 

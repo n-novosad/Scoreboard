@@ -19,8 +19,8 @@ namespace LiveFootballScoreBoard.Tests.Services
 
 		private readonly ConcurrentDictionary<int, FootballMatch> _footballMatches = new()
 		{
-			[1] = new() { AwayTeam = "Mexico", HomeTeam = "Canada", StartTime = DateTime.Now, Scores = new ( 0, 0 ) },
-			[2] = new() { AwayTeam = "Germany", HomeTeam = "France", StartTime = DateTime.Now.AddHours(-1), Scores = new (3, 2) },	
+			[0] = new() { AwayTeam = "Mexico", HomeTeam = "Canada", StartTime = DateTime.Now, Scores = new ( 0, 0 ) },
+			[1] = new() { AwayTeam = "Germany", HomeTeam = "France", StartTime = DateTime.Now.AddHours(-1), Scores = new (3, 2) },	
 		};
 
 
