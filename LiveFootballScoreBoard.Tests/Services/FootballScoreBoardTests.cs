@@ -10,9 +10,9 @@ namespace LiveFootballScoreBoard.Tests.Services
 	[TestClass]
 	public class FootballScoreBoardTests : BaseTests<FootballScoreBoardService>
 	{
-		private const string MatchesKey = Constants.FOOTBALL_MATCHES_KEY;
 		private const ushort MatchDuration = Constants.FOOTBALL_MATCH_DURATION_MINS;
 		private const ushort MatchDelay = Constants.FOOTBALL_MATCH_OVERDUE_MINS;
+		private const  string NonDeserializableCacheValue = "{}";
 
 		private readonly Mock<IStorageService<string?>> _storageServiceMock;
 		private readonly IFootballScoreBoardService _service;
@@ -23,7 +23,6 @@ namespace LiveFootballScoreBoard.Tests.Services
 			[2] = new() { AwayTeam = "Germany", HomeTeam = "France", StartTime = DateTime.Now.AddHours(-1), Scores = new (3, 2) },	
 		};
 
-		private readonly string _nonDeserializableCacheValue = "{}";
 
 		public FootballScoreBoardTests()
 		{
@@ -75,11 +74,13 @@ namespace LiveFootballScoreBoard.Tests.Services
 		}
 
 		[TestMethod]
-		public void Constructor_InitializesEmptyContainerIfNothingInMemory()
+		[DataRow(null)]
+		[DataRow(NonDeserializableCacheValue)]
+		public void Constructor_InitializesEmptyContainerIfNothingInMemory(string? cache)
 		{
 			// Arrange
 			_storageServiceMock.Setup(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY))
-				.Returns(default(string?));
+				.Returns(cache);
 			// Act
 			var service = new FootballScoreBoardService(_storageServiceMock.Object, _loggerMock.Object);
 

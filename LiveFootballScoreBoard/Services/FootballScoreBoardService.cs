@@ -9,14 +9,14 @@ namespace LiveFootballScoreBoard.Services
 	{
 		private readonly IStorageService<string?> _storageService;
 		private readonly ILogger<FootballScoreBoardService> _logger;
-		private readonly ConcurrentDictionary<int, FootballMatch> _liveFootballMatches;
+		private ConcurrentDictionary<int, FootballMatch> _liveFootballMatches;
 
 		public FootballScoreBoardService(IStorageService<string?> storageService, ILogger<FootballScoreBoardService> logger)
         {
 			_storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-			_liveFootballMatches = JsonSerializer.Deserialize<ConcurrentDictionary<int, FootballMatch>>(_storageService.GetItem(Constants.FOOTBALL_MATCHES_KEY)) ?? new();
+			PreloadData();
 		}
 
         public ExecutionResult FinishMatch(int matchId)
@@ -37,6 +37,20 @@ namespace LiveFootballScoreBoard.Services
 		public ExecutionResult UpdateMatchScore(int matchId, ushort homeTeamScore, ushort awayTeamScore)
 		{
 			throw new NotImplementedException();
+		}
+
+		private void PreloadData()
+		{
+			try
+			{
+				_liveFootballMatches = JsonSerializer.Deserialize<ConcurrentDictionary<int, FootballMatch>>(_storageService.GetItem(Constants.FOOTBALL_MATCHES_KEY)) ?? new();
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message, e);
+
+				_liveFootballMatches = new();
+			}
 		}
 	}
 }
