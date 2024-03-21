@@ -225,5 +225,22 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.IsFalse(actualResult.Succeeded);
 			Assert.AreEqual(Constants.SCORES_CANNOT_EXCEED_SETTLED_THRESHOLD, actualResult.Error.Message);
 		}
+
+		[TestMethod]
+		public void UpdateMatchScore_OnUpdateScoresStorageValuesHasToBeRenewed()
+		{
+			// Arrange
+			var matchId = 1;
+			ushort homeTeamScore = 3;
+			ushort awayTeamScore = 4;
+			_storageServiceMock.Setup(t => t.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, It.IsAny<string?>()));
+
+			// Act
+			var actualResult = _service.UpdateMatchScore(matchId, homeTeamScore, awayTeamScore);
+
+			// Assert
+			Assert.IsTrue(actualResult.Succeeded);
+			_storageServiceMock.Verify(t => t.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, It.IsAny<string?>()));
+		}
 	}
 }
