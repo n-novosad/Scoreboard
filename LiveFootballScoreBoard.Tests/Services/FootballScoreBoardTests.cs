@@ -29,6 +29,9 @@ namespace LiveFootballScoreBoard.Tests.Services
 		{
 			_loggerMock = new Mock<ILogger<FootballScoreBoardService>>();
 			_storageServiceMock = new Mock<IStorageService<string?>>();
+			var serializedValue = JsonSerializer.Serialize(_footballMatches);
+			_storageServiceMock.Setup(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY))
+				.Returns(serializedValue);
 
 			_service = new FootballScoreBoardService(_storageServiceMock.Object, _loggerMock.Object);
 		}
@@ -63,15 +66,12 @@ namespace LiveFootballScoreBoard.Tests.Services
 		public void Constructor_PreloadsMatchesOnInitialization()
 		{
 			// Arrange
-			var serializedValue = JsonSerializer.Serialize(_footballMatches);
-			_storageServiceMock.Setup(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY))
-				.Returns(serializedValue);
 
 			// Act
 			var service = new FootballScoreBoardService(_storageServiceMock.Object, _loggerMock.Object);
 
 			// Assert
-			_storageServiceMock.Verify(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY), Times.Once);
+			_storageServiceMock.Verify(t => t.GetItem(Constants.FOOTBALL_MATCHES_KEY), Times.Exactly(2));
 		}
 
 		[TestMethod]

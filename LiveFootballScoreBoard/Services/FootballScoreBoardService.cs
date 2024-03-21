@@ -1,4 +1,6 @@
-﻿using LiveFootballScoreBoard.Models;
+﻿using System.Collections.Concurrent;
+using System.Text.Json;
+using LiveFootballScoreBoard.Models;
 using Microsoft.Extensions.Logging;
 
 namespace LiveFootballScoreBoard.Services
@@ -7,11 +9,14 @@ namespace LiveFootballScoreBoard.Services
 	{
 		private readonly IStorageService<string?> _storageService;
 		private readonly ILogger<FootballScoreBoardService> _logger;
+		private readonly ConcurrentDictionary<int, FootballMatch> _liveFootballMatches;
 
 		public FootballScoreBoardService(IStorageService<string?> storageService, ILogger<FootballScoreBoardService> logger)
         {
 			_storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+			_liveFootballMatches = JsonSerializer.Deserialize<ConcurrentDictionary<int, FootballMatch>>(_storageService.GetItem(Constants.FOOTBALL_MATCHES_KEY)) ?? new();
 		}
 
         public ExecutionResult FinishMatch(int matchId)
