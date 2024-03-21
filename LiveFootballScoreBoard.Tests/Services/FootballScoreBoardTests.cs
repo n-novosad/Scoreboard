@@ -104,16 +104,17 @@ namespace LiveFootballScoreBoard.Tests.Services
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void StartFootballMatch_ThrowsExceptionWhenLoggerIsNull()
+		public void StartFootballMatch_ReturnsErrorWhenTwoTeamsAreSame()
 		{
 			// Arrange
-			var emptyLogger = default(ILogger<FootballScoreBoardService>);
+			var expectedResult = new ExecutionResult<int> { Succeeded = false };
 
 			// Act
-			var service = new FootballScoreBoardService(_storageServiceMock.Object, emptyLogger);
+			var actualResult = _service.StartFootballMatch(AwayTeam, AwayTeam);
 
 			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.TEAM_CANNOT_COMPETE_AGAINST_THEMSELVES, actualResult.Error.Message);
 		}
 	}
 }

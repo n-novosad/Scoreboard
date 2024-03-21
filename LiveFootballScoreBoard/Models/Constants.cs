@@ -11,5 +11,6 @@ namespace LiveFootballScoreBoard.Models
 		public const string FOOTBALL_MATCHES_KEY = "FootballScoreBoard";
 		public const string NULL_VALIDATION_ERROR = "Value cannot be null. (Parameter 'key')";
 		public const string TEAM_CANNOT_BE_EMPTY = "Team name should be non empty string";
+		public const string TEAM_CANNOT_COMPETE_AGAINST_THEMSELVES = "Teams should have different names";
 	}
 }
