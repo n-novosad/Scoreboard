@@ -14,6 +14,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 		private const ushort MatchDelay = Constants.FOOTBALL_MATCH_OVERDUE_MINS;
 		private const  string NonDeserializableCacheValue = "{}";
 		private const string AwayTeam = "Barcelona";
+		private const string HomeTeam = "Madrid";
 		private readonly Mock<IStorageService<string?>> _storageServiceMock;
 		private readonly IFootballScoreBoardService _service;
 
@@ -129,6 +130,38 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.IsFalse(actualResult.Succeeded);
 			Assert.AreEqual(Constants.TEAM_ALREADY_PLAYING, actualResult.Error.Message);
+		}
+
+		[TestMethod]
+		public void StartFootballMatch_AugmentScoreboardMatchesWithANewOne()
+		{
+			// Arrange
+			var expectedResult = new ExecutionResult<int> { Succeeded = true };
+			var pressumableId = DateTime.UtcNow.Ticks;
+
+			// Act
+			var actualResult = _service.StartFootballMatch(HomeTeam, AwayTeam);
+
+			// Assert
+			Assert.IsTrue(actualResult.Succeeded);
+			Assert.IsTrue(pressumableId <= actualResult.Response);
+		}
+
+		[TestMethod]
+		public void StartFootballMatch_WhenNewMatchStartedUpdateStorageWithLatestMatches()
+		{
+			// Arrange
+			var expectedResult = new ExecutionResult<int> { Succeeded = true };
+			var pressumableId = DateTime.UtcNow.Ticks;
+			_storageServiceMock.Setup(t => t.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, It.IsAny<string?>()));
+
+			// Act
+			var actualResult = _service.StartFootballMatch($"{HomeTeam}-", $"{AwayTeam}-");
+
+			// Assert
+			Assert.IsTrue(actualResult.Succeeded);
+			Assert.IsTrue(pressumableId <= actualResult.Response);
+			_storageServiceMock.Verify(t => t.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, It.IsAny<string?>()));
 		}
 	}
 }
