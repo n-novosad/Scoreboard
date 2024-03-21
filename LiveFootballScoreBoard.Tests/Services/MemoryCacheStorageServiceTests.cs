@@ -130,6 +130,44 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.AreEqual(_memoryCache.Get<string?>(key), value);
 		}
 
+		[TestMethod]
+		[DataRow(null, "value")]
+		public void UpdateItem_ReturnsFailureWhenKeyIsNull(string key, string? value)
+		{
+			// Arrange
+			var succeeded = false;
+
+			// Act
+			var actualResult = _service.UpdateItem(key, value);
+
+			// Assert
+			Assert.AreEqual(succeeded, actualResult.Succeeded);
+			Assert.AreEqual(typeof(ArgumentNullException), actualResult.Error.GetType());
+			_loggerMock.Verify(x => x.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
+					It.IsAny<Exception>(),
+					(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+					Times.Once);
+		}
+
+		[TestMethod]
+		[DataRow("footballMatches")]
+		[DataRow("hockeyMatches")]
+		public void RemoveItem_SuccessfullyCleanedUp(string key)
+		{
+			// Arrange
+			var succeeded = true;
+
+			// Act
+			var actualResult = _service.RemoveItem(key);
+
+			// Assert
+			Assert.AreEqual(succeeded, actualResult.Succeeded);
+		}
+
+
 		[TestCleanup]
 		public void Cleanup()
 		{
