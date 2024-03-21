@@ -87,6 +87,11 @@ namespace LiveFootballScoreBoard.Services
 			{
 				if (_liveFootballMatches.TryGetValue(matchId, out var match))
 				{
+					if ( match.Scores.Item1 > homeTeamScore || match.Scores.Item2 > awayTeamScore)
+					{
+						return new ExecutionResult { Succeeded = false, Error = new ArgumentException(Constants.MATCH_SCORES_CAN_BE_ONLY_AUGMENTED) };
+					}
+
 					match.Scores = new(homeTeamScore, awayTeamScore);
 
 					return new ExecutionResult { Succeeded = true };
