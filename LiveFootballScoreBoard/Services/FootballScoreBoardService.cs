@@ -83,7 +83,23 @@ namespace LiveFootballScoreBoard.Services
 
 		public ExecutionResult UpdateMatchScore(long matchId, ushort homeTeamScore, ushort awayTeamScore)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				if (_liveFootballMatches.TryGetValue(matchId, out var match))
+				{
+					match.Scores = new(homeTeamScore, awayTeamScore);
+
+					return new ExecutionResult { Succeeded = true };
+				}
+
+				return new ExecutionResult { Succeeded = false, Error = new InvalidOperationException() };
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message, e);
+
+				return new ExecutionResult<long> { Error = e, Succeeded = false };
+			}
 		}
 
 		private void PreloadData()
