@@ -65,6 +65,33 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 		}
 
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetItem_ThrowsExceptionWhenLoggerIsNull()
+		{
+			// Arrange
+			var emptyLogger = default(ILogger<MemoryCacheStorageService>);
+
+			// Act
+			var service = new MemoryCacheStorageService(_memoryCache, emptyLogger);
+
+			// Assert
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetItem_ThrowsExceptionWhenAnyCacheAndLoggerAreNull()
+		{
+			// Arrange
+			var emptyLogger = default(ILogger<MemoryCacheStorageService>);
+			var emptyMemoryCache = default(MemoryCache);
+
+			// Act
+			var service = new MemoryCacheStorageService(emptyMemoryCache, emptyLogger);
+
+			// Assert
+		}
+
 		[TestCleanup]
 		public void Cleanup()
 		{
