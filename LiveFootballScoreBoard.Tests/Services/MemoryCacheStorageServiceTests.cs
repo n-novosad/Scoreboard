@@ -7,13 +7,17 @@ using Moq;
 namespace LiveFootballScoreBoard.Tests.Services
 {
 	[TestClass]
-	public class MemoryCacheStorageServiceTests
+	public class MemoryCacheStorageServiceTests : BaseTests<MemoryCacheStorageService>
 	{
-		private const string MatchesKey = Constants.FOOTBALL_MATCHES_KEY;
+		private const string FootballMatchesKey = "footballMatches";
+		private const string HockeyMatchesKey = "hockeyMatches";
+		private const string EmptyArray = "[]";
+		private const string CachedArray = "[1, 2, 4]";
+		private const string CachedItem = "[{ property: value }]";
+		private const string ValueItem = "value";
 
 		private readonly MemoryCacheStorageService _service;
 		private readonly IMemoryCache _memoryCache;
-		private readonly Mock<ILogger<MemoryCacheStorageService>> _loggerMock;
 
 		public MemoryCacheStorageServiceTests() 
 		{ 
@@ -25,15 +29,15 @@ namespace LiveFootballScoreBoard.Tests.Services
 
 		[TestMethod]
 		[DataRow(null)]
-		[DataRow("[{ property: value }]")]
+		[DataRow(CachedItem)]
 		public void GetItem_ReturnsFootballMatchesByKey(string? cache) 
 		{
 			// Arrange
 			var expectedResult = cache;
-			_memoryCache.Set(MatchesKey, expectedResult);
+			_memoryCache.Set(Constants.FOOTBALL_MATCHES_KEY, expectedResult);
 
 			// Act
-			var actualResult = _service.GetItem(MatchesKey);
+			var actualResult = _service.GetItem(Constants.FOOTBALL_MATCHES_KEY);
 
 			// Assert
 			Assert.AreEqual(expectedResult, actualResult);
@@ -50,13 +54,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 			var actualResult = _service.GetItem(key);
 
 			// Assert
-			_loggerMock.Verify(x => x.Log(
-						LogLevel.Error,
-						It.IsAny<EventId>(),
-						It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
-						It.IsAny<Exception>(),
-						(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
-						Times.Once);
+			VerifyLogger(Constants.NULL_VALIDATION_ERROR, Times.Once());
 		}
 
 		[TestMethod]
@@ -66,7 +64,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 			var expectedResult = default(string?);
 
 			// Act
-			var actualResult = _service.GetItem(MatchesKey);
+			var actualResult = _service.GetItem(Constants.FOOTBALL_MATCHES_KEY);
 
 			// Assert
 			Assert.AreEqual(expectedResult, actualResult);
@@ -113,9 +111,9 @@ namespace LiveFootballScoreBoard.Tests.Services
 		}
 
 		[TestMethod]
-		[DataRow("footballMatches", "[]")]
-		[DataRow("hockeyMatches", null)]
-		[DataRow("footballMatches", "[1, 2, 4]")]
+		[DataRow(FootballMatchesKey, EmptyArray)]
+		[DataRow(HockeyMatchesKey, null)]
+		[DataRow(FootballMatchesKey, CachedArray)]
 		public void UpdateItem_AddsNewItemIfItMissingOrUpdateOne(string key, string? value)
 		{
 			// Arrange
@@ -131,7 +129,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 		}
 
 		[TestMethod]
-		[DataRow(null, "value")]
+		[DataRow(null, ValueItem)]
 		public void UpdateItem_ReturnsFailureWhenKeyIsNull(string key, string? value)
 		{
 			// Arrange
@@ -143,18 +141,12 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.AreEqual(succeeded, actualResult.Succeeded);
 			Assert.AreEqual(typeof(ArgumentNullException), actualResult.Error.GetType());
-			_loggerMock.Verify(x => x.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
-					It.IsAny<Exception>(),
-					(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
-				Times.Once);
+			VerifyLogger(Constants.NULL_VALIDATION_ERROR, Times.Once());
 		}
 
 		[TestMethod]
-		[DataRow("footballMatches")]
-		[DataRow("hockeyMatches")]
+		[DataRow(FootballMatchesKey)]
+		[DataRow(HockeyMatchesKey)]
 		public void RemoveItem_SuccessfullyCleanedUp(string key)
 		{
 			// Arrange
@@ -179,13 +171,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.AreEqual(succeeded, actualResult.Succeeded);
 			Assert.AreEqual(typeof(ArgumentNullException), actualResult.Error.GetType());
-			_loggerMock.Verify(x => x.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
-					It.IsAny<Exception>(),
-					(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
-				Times.Once);
+			VerifyLogger(Constants.NULL_VALIDATION_ERROR, Times.Once());
 		}
 
 		[TestCleanup]
