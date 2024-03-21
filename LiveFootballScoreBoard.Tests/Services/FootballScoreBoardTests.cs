@@ -207,6 +207,23 @@ namespace LiveFootballScoreBoard.Tests.Services
 
 			// Assert
 			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.MATCH_SCORES_CAN_BE_ONLY_AUGMENTED, actualResult.Error.Message);
+		}
+
+		[TestMethod]
+		public void UpdateMatchScore_ScoresCannotBeMassivelyIncreased()
+		{
+			// Arrange
+			var matchId = 1;
+			ushort homeTeamScore = 400;
+			ushort awayTeamScore = 300;
+
+			// Act
+			var actualResult = _service.UpdateMatchScore(matchId, homeTeamScore, awayTeamScore);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.SCORES_CANNOT_EXCEED_SETTLED_THRESHOLD, actualResult.Error.Message);
 		}
 	}
 }
