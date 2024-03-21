@@ -11,7 +11,7 @@ namespace LiveFootballScoreBoard.Services
 		public FootballScoreBoardService(IStorageService<string?> storageService, ILogger<FootballScoreBoardService> logger)
         {
 			_storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-			_logger = logger;
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
         public ExecutionResult FinishMatch(int matchId)
