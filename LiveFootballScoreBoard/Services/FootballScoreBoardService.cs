@@ -38,6 +38,11 @@ namespace LiveFootballScoreBoard.Services
 					return new ExecutionResult<long> { Succeeded = false, Error = new ArgumentException(Constants.TEAM_CANNOT_BE_EMPTY)};
 				}
 
+				if (homeTeam.Trim().Equals(awayTeam.Trim(), StringComparison.InvariantCultureIgnoreCase))
+				{
+					return new ExecutionResult<long> { Succeeded = false, Error = new ArgumentException(Constants.TEAM_CANNOT_COMPETE_AGAINST_THEMSELVES) };
+				}
+
 				var id = DateTime.UtcNow.Ticks;
 				var newMatch = new FootballMatch 
 				{ 
