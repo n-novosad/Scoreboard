@@ -9,11 +9,11 @@ namespace LiveFootballScoreBoard.Tests.Services
 	[TestClass]
 	public class MemoryCacheStorageServiceTests
 	{
+		private const string MatchesKey = Constants.FOOTBALL_MATCHES_KEY;
+
 		private readonly MemoryCacheStorageService _service;
 		private readonly IMemoryCache _memoryCache;
 		private readonly Mock<ILogger<MemoryCacheStorageService>> _loggerMock;
-
-		private const string MatchesKey = Constants.FOOTBALL_MATCHES_KEY;
 
 		public MemoryCacheStorageServiceTests() 
 		{ 

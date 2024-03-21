@@ -2,7 +2,7 @@
 
 namespace LiveFootballScoreBoard.Services
 {
-	public interface IFootballScoreBoard
+	public interface IFootballScoreBoardService
 	{
 		ExecutionResult<int> StartFootballMatch(string homeTeam, string awayTeam);
 		ExecutionResult UpdateMatchScore(int matchId, ushort homeTeamScore, ushort awayTeamScore);
