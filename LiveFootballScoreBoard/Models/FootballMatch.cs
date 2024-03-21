@@ -1,6 +1,9 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace LiveFootballScoreBoard.Models
 {
+	[ExcludeFromCodeCoverage]
 	public class FootballMatch
 	{
         public DateTime StartTime { get; set; }
