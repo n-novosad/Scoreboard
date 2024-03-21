@@ -10,7 +10,7 @@ namespace LiveFootballScoreBoard.Services
 
 		public FootballScoreBoardService(IStorageService<string?> storageService, ILogger<FootballScoreBoardService> logger)
         {
-			_storageService = storageService;
+			_storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 			_logger = logger;
 		}
 
