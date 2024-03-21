@@ -66,6 +66,8 @@ namespace LiveFootballScoreBoard.Services
 
 				if (_liveFootballMatches.TryAdd(id, newMatch))
 				{
+					_storageService.UpdateItem(Constants.FOOTBALL_MATCHES_KEY, JsonSerializer.Serialize(_liveFootballMatches));
+
 					return new ExecutionResult<long> { Succeeded = true, Response = id };
 				}
 
