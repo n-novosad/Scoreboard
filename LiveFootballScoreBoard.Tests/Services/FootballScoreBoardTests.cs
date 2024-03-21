@@ -36,5 +36,18 @@ namespace LiveFootballScoreBoard.Tests.Services
 
 			// Assert
 		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void Constructor_ThrowsExceptionWhenLoggerIsNull()
+		{
+			// Arrange
+			var emptyLogger = default(ILogger<FootballScoreBoardService>);
+
+			// Act
+			var service = new FootballScoreBoardService(_storageServiceMock.Object, emptyLogger);
+
+			// Assert
+		}
 	}
 }
