@@ -149,7 +149,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 					It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
 					It.IsAny<Exception>(),
 					(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
-					Times.Once);
+				Times.Once);
 		}
 
 		[TestMethod]
@@ -167,6 +167,26 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.AreEqual(succeeded, actualResult.Succeeded);
 		}
 
+		[TestMethod]
+		public void RemoveItem_FailureOnAccessingItemByNullKey()
+		{
+			// Arrange
+			var succeeded = false;
+
+			// Act
+			var actualResult = _service.RemoveItem(null);
+
+			// Assert
+			Assert.AreEqual(succeeded, actualResult.Succeeded);
+			Assert.AreEqual(typeof(ArgumentNullException), actualResult.Error.GetType());
+			_loggerMock.Verify(x => x.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
+					It.IsAny<Exception>(),
+					(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+				Times.Once);
+		}
 
 		[TestCleanup]
 		public void Cleanup()
