@@ -40,6 +40,26 @@ namespace LiveFootballScoreBoard.Tests.Services
 		}
 
 		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GetItem_InnerExceptionThrownIfKeyIsNull()
+		{
+			// Arrange
+			string? key = null;
+
+			// Act
+			var actualResult = _service.GetItem(key);
+
+			// Assert
+			_loggerMock.Verify(x => x.Log(
+						LogLevel.Error,
+						It.IsAny<EventId>(),
+						It.Is<It.IsAnyType>((o, t) => string.Equals("Value cannot be null. (Parameter 'key')", o.ToString(), StringComparison.InvariantCultureIgnoreCase)),
+						It.IsAny<Exception>(),
+						(Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+						Times.Once);
+		}
+
+		[TestMethod]
 		public void GetItem_ReturnsNullWhenKeyDoesNotExist()
 		{
 			// Arrange
