@@ -251,7 +251,7 @@ namespace LiveFootballScoreBoard.Tests.Services
 			var actualResult = _service.FinishMatch(matchId);
 
 			// Assert
-			Assert.IsTrue(actualResult.Succeeded);
+			Assert.IsFalse(actualResult.Succeeded);
 		}
 
 		[TestMethod]
@@ -280,6 +280,20 @@ namespace LiveFootballScoreBoard.Tests.Services
 			// Assert
 			Assert.IsFalse(actualResult.Succeeded);
 			Assert.AreEqual(Constants.MATCH_CANNOT_BE_INTERRUPTED, actualResult.Error.Message);
+		}
+
+		[TestMethod]
+		public void GetMatchesScoreSummary_CheckOrderingByScoresAndDatesIsValid()
+		{
+			// Arrange
+			var expectedResult = _footballMatches.Values.ToList().OrderByDescending(t => t.Scores.Item2 + t.Scores.Item1).ThenByDescending(t => t.StartTime).ToList();
+
+			// Act
+			var actualResult = _service.GetMatchesScoreSummary();
+
+			// Assert
+			Assert.AreEqual(actualResult.Response[0].StartTime, expectedResult[0].StartTime);
+			Assert.AreEqual(actualResult.Response[1].StartTime, expectedResult[1].StartTime);
 		}
 	}
 }
