@@ -1,6 +1,6 @@
 # Scoreboard
 
-There are a couple of moments worth mentioning, which were assuned during the development of the solution
+There are a couple of moments worth mentioning, which were assumed during the development of the solution
 
   - Storage type and the way this library will be consumed
 
