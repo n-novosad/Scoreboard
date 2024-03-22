@@ -267,5 +267,19 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.IsFalse(actualResult.Succeeded);
 			Assert.AreEqual(Constants.MATCH_WITH_SPECIFIED_ID_NOT_FOUND, actualResult.Error.Message);
 		}
+
+		[TestMethod]
+		public void FinishMatch_GenerateErrorResponseWhenAttemptingToRemoveMatchThatIsInProgress()
+		{
+			// Arrange
+			var matchId = 0;
+
+			// Act
+			var actualResult = _service.FinishMatch(matchId);
+
+			// Assert
+			Assert.IsFalse(actualResult.Succeeded);
+			Assert.AreEqual(Constants.MATCH_CANNOT_BE_INTERRUPTED, actualResult.Error.Message);
+		}
 	}
 }
