@@ -57,10 +57,10 @@ namespace LiveFootballScoreBoard.Services
 				{ 
 					Succeeded = true, 
 					Response = _liveFootballMatches
-									.Values
-									.OrderByDescending(t => t.Scores.Item1 + t.Scores.Item2)
-									.ThenByDescending(t => t.StartTime)
-									.ToList() 
+								.Values
+								.OrderByDescending(t => t.Scores.Item1 + t.Scores.Item2)
+								.ThenByDescending(t => t.StartTime)
+								.ToList() 
 				};
 			}
 			catch (Exception e)

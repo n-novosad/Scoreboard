@@ -295,5 +295,25 @@ namespace LiveFootballScoreBoard.Tests.Services
 			Assert.AreEqual(actualResult.Response[0].StartTime, expectedResult[0].StartTime);
 			Assert.AreEqual(actualResult.Response[1].StartTime, expectedResult[1].StartTime);
 		}
+
+		[TestMethod]
+		public void GetMatchesScoreSummary_WillGenerateEmptyListIfNoMatchesAreRunning()
+		{
+			// Arrange
+			_footballMatches[0].StartTime = DateTime.UtcNow.AddHours(-2);
+			_footballMatches[1].StartTime = DateTime.UtcNow.AddHours(-2.5);
+			var serialized = JsonSerializer.Serialize(_footballMatches);
+			_storageServiceMock.Setup(t => t.GetItem(It.IsAny<string>())).Returns(serialized);
+
+			// Act
+			var service = new FootballScoreBoardService(_storageServiceMock.Object, _loggerMock.Object);
+			service.FinishMatch(0);
+			service.FinishMatch(1);
+
+			var response = service.GetMatchesScoreSummary();
+
+			// Assert
+			Assert.AreEqual(response.Response.Count, 0);
+		}
 	}
 }
