@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using LiveFootballScoreBoard.Models;
 using Microsoft.Extensions.Logging;
 
@@ -50,7 +51,24 @@ namespace LiveFootballScoreBoard.Services
 
 		public ExecutionResult<IList<FootballMatch>> GetMatchesScoreSummary()
 		{
-			throw new NotImplementedException();
+			try
+			{
+				return new ExecutionResult<IList<FootballMatch>> 
+				{ 
+					Succeeded = true, 
+					Response = _liveFootballMatches
+									.Values
+									.OrderByDescending(t => t.Scores.Item1 + t.Scores.Item2)
+									.ThenByDescending(t => t.StartTime)
+									.ToList() 
+				};
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e.Message, e);
+
+				return new ExecutionResult<IList<FootballMatch>> { Error = e, Succeeded = false };
+			}
 		}
 
 		public ExecutionResult<long> StartFootballMatch(string homeTeam, string awayTeam)
