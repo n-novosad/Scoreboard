@@ -25,6 +25,13 @@ namespace LiveFootballScoreBoard.Services
 			{
 				if (_liveFootballMatches.ContainsKey(matchId))
 				{
+					var target = _liveFootballMatches[matchId];
+
+					if ((DateTime.UtcNow - target.StartTime).TotalMinutes <= Constants.FOOTBALL_MATCH_DURATION_MINS + Constants.FOOTBALL_MATCH_OVERDUE_MINS) 
+					{ 
+						return new ExecutionResult { Succeeded = false, Error = new ArgumentException(Constants.MATCH_CANNOT_BE_INTERRUPTED) };
+					}
+
 					if (_liveFootballMatches.TryRemove(matchId, out var match))
 					{
 						return new ExecutionResult { Succeeded = true };
